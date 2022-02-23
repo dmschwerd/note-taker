@@ -26,3 +26,10 @@ app.get('/assets/css/styles.css', (req, res) => {
 app.get('/api/notes', (req, res) => {
     res.sendFile(path.join(__dirname, './db/db.json'));
 });
+
+app.post('/api/notes', (req, res) => {
+    const dbInfo = createNewNote(req.body, db);
+    req.body.id = db.length.toString();
+    res.json(dbInfo);
+});
+
