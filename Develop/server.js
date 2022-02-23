@@ -8,6 +8,9 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.listen(PORT, () =>
+  console.log(`Express server listening on port ${PORT}!`)
+);
 
 app.use(express.static('public'));
 
@@ -28,8 +31,17 @@ app.get('/api/notes', (req, res) => {
 });
 
 app.post('/api/notes', (req, res) => {
-    const dbInfo = createNewNote(req.body, db);
+    const dbInfo = newNote(req.body, db);
     req.body.id = db.length.toString();
     res.json(dbInfo);
 });
 
+function newNote(body, dbArray) {
+    const notes = body;
+    dbArray.push(notes)
+    fs.writeFileSync(
+        path.join(__dirname, './db/db.json'),
+        JSON.stringify(dbArray, null, 2)
+    );
+    return notes;
+}
